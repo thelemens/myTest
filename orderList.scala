@@ -45,7 +45,7 @@ object orderList {
   var order7Row1 = new orderRow("01212", "gnome", 600, false, 800.0)
 
   //order 8 rows
-  var order8Row1 = new orderRow("01212", "gnome", 5, true, 80.0)
+  var order8Row1 = new orderRow("01212", "gnome", 5, false, 80.0)
 
   //order 9 rows
   var order9Row1 = new orderRow("01212", "gnome", 50, false, 160.0)
@@ -101,8 +101,10 @@ object orderList {
   var stock5Row2 = new stockRow("01216", "poo", 1000, "sector2", true)
   var stock5Row3 = new stockRow("01216", "poo", 400, "sector1", true)
 
-  var allStock = Array(stock1Row1, stock1Row2, stock1Row3, stock2Row1, stock2Row2, stock3Row1,
+  var allStock = ArrayBuffer(stock1Row1, stock1Row2, stock1Row3, stock2Row1, stock2Row2, stock3Row1,
     stock3Row2, stock4Row1, stock4Row2, stock5Row1, stock5Row2, stock5Row3)
+
+
 
 
   //all orders array
@@ -113,7 +115,8 @@ object orderList {
   }
 
 
-  println("1)Order information\n2)Stock information")
+
+  println("1)Order information\n2)Stock information\n3)Add stock")
   val firstInput = scala.io.StdIn.readLine()
 
   firstInput match {
@@ -122,6 +125,10 @@ object orderList {
 
     case "2" =>
       stockInformation
+
+    case "3" =>
+      addOrder
+
 
   }
 
@@ -138,9 +145,50 @@ object orderList {
         searchID
 
 
+
     }
 
   }
+
+  def addOrder: Unit = {
+
+
+
+    println("Enter stock ID: ")
+    var addStockID = scala.io.StdIn.readLine()
+
+    println("Enter stock name: ")
+    var addStockName = scala.io.StdIn.readLine()
+
+    println("Enter quantity: ")
+    var addStockQuantity = scala.io.StdIn.readLine()
+
+    println("Enter location: ")
+    var addStockLocation = scala.io.StdIn.readLine()
+
+    println("Enter porous state: (true/false)")
+    var addStockPorous = scala.io.StdIn.readLine()
+
+
+    allStock += new stockRow(addStockID, addStockName, addStockQuantity.toInt, addStockLocation, addStockPorous.toBoolean)
+    println("\nStock added")
+
+
+    for (newStock <- allStock) {
+
+      if (newStock.stockID == addStockID) {
+
+        println("\nStock ID: " + newStock.stockID + "\nStock name: " + newStock.stockName + "\nStock quantity: " + newStock.stockQuantity + "\nStock location: " + newStock.stockLocation + "\nStock porous: " + newStock.stockPorous)
+
+      }
+
+
+
+
+    }
+
+  }
+
 
   def viewAvailableOrders(): Unit = {
     for (item <- allOrders) {
@@ -161,7 +209,11 @@ object orderList {
           "\nCustomer address: " + i.customerAddress + "\nOrder status: " +
           i.orderStatus + "\nOrder is available? " + i.available + "\n")
 
-        println("\n1)Process this order?\n2)View porous items\n3)Close application ")
+        println("\n1)Process this order?\n2)View porous items\n3)Change location of order\n4)Close application ")
+
+
+
+
 
         val choice = scala.io.StdIn.readLine() match {
 
@@ -187,27 +239,85 @@ object orderList {
           case "2" =>
 
 
-            if (allOrders.head.orderID == IdInput) {
+
 
               for (row <- i.orderItems) {
 
-                if (row.porousReq == true) {
+                if (IdInput == i.orderID) {
 
-                  println("Item: " + row.itemName + "\n" + "Num of porous req: " + row.itemQuantity)
+                  if (row.porousReq == true) {
 
-                } else {
-                  //recursibely call function functionname(allOrders.tail)
+                    println("Item: " + row.itemName + "\n" + "Num of porous req: " + row.itemQuantity)
+
+                  }
+
+
+
+
                 }
-
-                // PorousCounter += row.itemQuantity
-
-
               }
+
+          case "3" =>
+            println("1)Sector 1\n2)Sector 2\n3)Sector 3\n4)Cancel")
+
+            val locationInput = scala.io.StdIn.readLine() match {
+
+
+
+
+
+              case "1" =>
+
+                i.orderLocation = "Sector 1"
+
+            println ("\nOrder ID: " + i.orderID + "\nCustomer name: " + i.customerName +
+            "\nCustomer address: " + i.customerAddress + "\nOrder status: " +
+            i.orderStatus + "\nOrder is available? " + i.available + "\nOrder location: " + i.orderLocation)
+
+
+
+              case "2" =>
+
+            i.orderLocation = "Sector 2"
+
+            println ("\nOrder ID: " + i.orderID + "\nCustomer name: " + i.customerName +
+            "\nCustomer address: " + i.customerAddress + "\nOrder status: " +
+            i.orderStatus + "\nOrder is available? " + i.available + "\nOrder location: " + i.orderLocation)
+
+
+
+              case "3" =>
+
+            i.orderLocation = "Sector 3"
+
+            println ("\nOrder ID: " + i.orderID + "\nCustomer name: " + i.customerName +
+            "\nCustomer address: " + i.customerAddress + "\nOrder status: " +
+            i.orderStatus + "\nOrder is available? " + i.available + "\nOrder location: " + i.orderLocation)
+
             }
+
+
+            }
+
+
+
+
+
+
+
+            }
+
         }
+
+
+
+
+
+
+
       }
-    }
-  }
+
+
 
       def stockInformation: Unit = {
 
@@ -333,5 +443,9 @@ object orderList {
         }
       }
     }
+
+
+
+
 
 
